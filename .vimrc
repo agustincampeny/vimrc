@@ -1,11 +1,27 @@
 scriptencoding utf-8
 set encoding=utf-8
 
-call plug#begin('~/.vim/plugged')
+""""""""""""""""""""""""""
+" vim-plug check/install "
+""""""""""""""""""""""""""
+  let vimplug_exists = expand('~/.vim/autoload/plug.vim')
+  if !filereadable(vimplug_exists)
+    if !executable("curl")
+      echoerr "You have to install curl or first install vim-plug yourself!"
+      execute "q!"
+    endif
+    echo "Installing Vim-Plug..."
+    echo ""
+    silent !\curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    " let g:not_finish_vimplug = "yes"
+
+    autocmd VimEnter * PlugInstall
+  endif
 
 """""""""
 " Plugs "
 """""""""
+  call plug#begin(expand('~/.vim/plugged'))
   Plug 'thaerkh/vim-indentguides'
   " ctrl-p is a fuzzy file finder.
   Plug 'kien/ctrlp.vim'
@@ -93,8 +109,8 @@ let $QT_PLUGIN_PATH = '/usr/local/opt/qt/bin/qtpaths:/usr/local/lib/qt5/plugins'
   set splitbelow          " Horizontal split below current.
   set splitright          " Vertical split to right of current.
   set autoread            " If file updates, load automatically.
-  au! BufWritePost .vimrc so %
-  au! BufWritePost .gvimrc so %
+  au! BufWritePost .vimrc so % | :AirlineRefresh
+  au! BufWritePost .gvimrc so % | :AirlineRefresh
 
   set display+=lastline
   set nostartofline       " Do not jump to first character with page commands.
@@ -274,6 +290,7 @@ let g:vimtex_quickfix_method = 'pplatex'
 let g:vimtex_quickfix_autoclose_after_keystrokes = 5
 let g:tex_flavor = 'latex'
 let g:tex_conceal = ''
+let g:vimtex_fold_enabled = 1
 " latexmk options
 let g:vimtex_compiler_latexmk = {
       \ 'options' : [
